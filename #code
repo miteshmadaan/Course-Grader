@@ -1,0 +1,77 @@
+import xlrd
+import openpyxl
+from openpyxl.chart import BarChart,Reference
+from xlwt import Workbook
+
+NgradeA = 0
+NgradeB = 0
+NgradeC = 0
+NgradeNC = 0
+
+# grader function that assigns value to each of the student's marks
+def grader(mark):
+    if mark == 33.0:
+        grade = 'A'
+    elif mark == 22.0:
+        grade = 'B'
+    elif mark == 11.0:
+        grade = 'C'
+    else:
+        grade = 'NC'
+
+    return grade
+
+loc = r"G:\BITS\LECTURES\SEM 1-1\CP\CP Lab\CSF111_181_Practical_Marks.xlsx"
+sheet = xlrd.open_workbook(loc).sheet_by_index(0)
+
+wb = Workbook()
+sheet1 = wb.add_sheet("CP grades")
+
+sheet1.write(0,0,'ID NO.')
+sheet1.write(0,1,'NAME')
+sheet1.write(0,2,'TOTAL')
+sheet1.write(0,3,'GRADE')
+
+#loop for setting column width
+sheet1.col(0).width = 256*20
+sheet1.col(1).width = 256*40
+sheet1.col(2).width = 256*10
+sheet1.col(3).width = 256*10
+
+#loop for writing value in sheet CP grade.xls
+
+for x in range(1,sheet.nrows):
+    sheet1.write(x,0,str(sheet.cell_value(x,0)))
+    sheet1.write(x,1,sheet.cell_value(x,1))
+    sheet1.write(x,2,int(sheet.cell_value(x,15)))
+    sheet1.write(x,3,grader(sheet.cell_value(x,15)))
+for x in range(1,sheet.nrows):
+    mark = sheet.cell_value(x,15)
+    if mark == 33.0:
+        NgradeA += 1
+    elif mark == 22.0:
+        NgradeB += 1
+    elif mark == 11.0:
+        NgradeC += 1
+    else:
+        NgradeNC += 1
+
+wb.save(r"CP grades.xls")
+
+workbook = openpyxl.Workbook()
+wb1 = workbook.active
+
+wb1.cell(1,1).value = NgradeA
+wb1.cell(2,1).value = NgradeB
+wb1.cell(3,1).value = NgradeC
+wb1.cell(4,1).value = NgradeNC
+
+values = Reference(wb1,min_row=1,min_col=1,max_row=4,max_col=1)
+chart = BarChart()
+chart.add_data(values)
+chart.title = "CP grade report"
+chart.x_axis.title = "Grades"
+chart.y_axis.title = "No. of students"
+wb1.add_chart(chart,"E2")
+
+workbook.save(r"Bar chart.xlsx")
