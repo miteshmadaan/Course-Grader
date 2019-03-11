@@ -2,12 +2,11 @@ import xlrd
 import openpyxl
 from openpyxl.chart import BarChart,Reference
 from xlwt import Workbook
-
+# defining variables to store no of grades
 NgradeA = 0
 NgradeB = 0
 NgradeC = 0
 NgradeNC = 0
-
 # grader function that assigns value to each of the student's marks
 def grader(mark):
     if mark == 33.0:
@@ -18,60 +17,54 @@ def grader(mark):
         grade = 'C'
     else:
         grade = 'NC'
-
     return grade
-
+# loc variable stores address of input data file
 loc = r"G:\BITS\LECTURES\SEM 1-1\CP\CP Lab\CSF111_181_Practical_Marks.xlsx"
 sheet = xlrd.open_workbook(loc).sheet_by_index(0)
-
+# creating a excel sheet to store output data
 wb = Workbook()
 sheet1 = wb.add_sheet("CP grades")
-
-sheet1.write(0,0,'ID NO.')
-sheet1.write(0,1,'NAME')
-sheet1.write(0,2,'TOTAL')
-sheet1.write(0,3,'GRADE')
-
-#loop for setting column width
+# commands for setting column width
 sheet1.col(0).width = 256*20
 sheet1.col(1).width = 256*40
 sheet1.col(2).width = 256*10
 sheet1.col(3).width = 256*10
-
 #loop for writing value in sheet CP grade.xls
-
+for x in range(sheet.nrows):
+    sheet1.write(x,0,str(sheet.cell_value(x,0)))# extracting id no. and writing it
+    sheet1.write(x,1,sheet.cell_value(x,1))# writing name of each student
+    sheet1.write(x,2,sheet.cell_value(x,15))# copying total score of each student
+    if x == 0: # first row of 4th column contains title for 'GRADES'
+        sheet1.write(0,3,'GRADE')
+        continue # skip next line for x=3
+    sheet1.write(x,3,grader(sheet.cell_value(x,15)))# assigning grade to each student
 for x in range(1,sheet.nrows):
-    sheet1.write(x,0,str(sheet.cell_value(x,0)))
-    sheet1.write(x,1,sheet.cell_value(x,1))
-    sheet1.write(x,2,int(sheet.cell_value(x,15)))
-    sheet1.write(x,3,grader(sheet.cell_value(x,15)))
-for x in range(1,sheet.nrows):
-    mark = sheet.cell_value(x,15)
-    if mark == 33.0:
+    mark1 = sheet.cell_value(x,15)
+    if mark1 == 33.0:
         NgradeA += 1
-    elif mark == 22.0:
+    elif mark1 == 22.0:
         NgradeB += 1
-    elif mark == 11.0:
+    elif mark1 == 11.0:
         NgradeC += 1
     else:
         NgradeNC += 1
-
+# saving the output file
 wb.save(r"CP grades.xls")
-
+# declaring new sheet for bar chart
 workbook = openpyxl.Workbook()
 wb1 = workbook.active
-
+# writing data into file for plotting chart
 wb1.cell(1,1).value = NgradeA
 wb1.cell(2,1).value = NgradeB
 wb1.cell(3,1).value = NgradeC
 wb1.cell(4,1).value = NgradeNC
-
-values = Reference(wb1,min_row=1,min_col=1,max_row=4,max_col=1)
+# plotting data into chart
+values = Reference(wb1,min_row=1,min_col=1,max_row=4,max_col=1)# limits for fetching data from file
 chart = BarChart()
 chart.add_data(values)
-chart.title = "CP grade report"
-chart.x_axis.title = "Grades"
-chart.y_axis.title = "No. of students"
-wb1.add_chart(chart,"E2")
-
+chart.title = "CP grade report"# title of chart
+chart.x_axis.title = "Grades"# title for horizontal axis of the chart
+chart.y_axis.title = "No. of students"# title for vertical axis of the chart
+wb1.add_chart(chart,"E2")# command for location of chart in file
+# saving the output data(chart) file
 workbook.save(r"Bar chart.xlsx")
