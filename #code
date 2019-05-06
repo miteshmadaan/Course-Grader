@@ -1,70 +1,44 @@
-import xlrd
-import openpyxl
-from openpyxl.chart import BarChart,Reference
-from xlwt import Workbook
-# defining variables to store no of grades
-NgradeA = 0
-NgradeB = 0
-NgradeC = 0
-NgradeNC = 0
-# grader function that assigns value to each of the student's marks
-def grader(mark):
-    if mark == 33.0:
+#Project Name: Course Grader
+#Author: Mitesh Madaan
+#Description: This project inputs data from a input file(csv format) having marks of students and assigns a grade to each of them.
+#The final details with assigned grade is written in a output file in csv format.
+#                                         *****************************START******************************
+#imporitng necessary module for working with csv file
+import csv
+# loc variable stores address of input and output data file
+input_file = r"G:\BITS\LECTURES\SEM 1-1\CP\CP Lab\CSF111_181_Practical_Marks.csv"
+output_file = r"C:\Users\HP\.PyCharmCE2018.3\config\scratches\tut files\projects\course grader\CP grades.csv"
+#declaring a data set to store all student's raw information from input file to be written in output file
+data = []
+#grader function that assigns a grade to each of the student's marks
+def grader(mark1):
+    if mark1 == 33:
         grade = 'A'
-    elif mark == 22.0:
+    elif mark1 == 22:
         grade = 'B'
-    elif mark == 11.0:
+    elif mark1 == 11:
         grade = 'C'
     else:
         grade = 'NC'
+    #returing grade assigned back to main driver function
     return grade
-# loc variable stores address of input data file
-loc = r"G:\BITS\LECTURES\SEM 1-1\CP\CP Lab\CSF111_181_Practical_Marks.xlsx"
-sheet = xlrd.open_workbook(loc).sheet_by_index(0)
-# creating a excel sheet to store output data
-wb = Workbook()
-sheet1 = wb.add_sheet("CP grades")
-# commands for setting column width
-sheet1.col(0).width = 256*20
-sheet1.col(1).width = 256*40
-sheet1.col(2).width = 256*10
-sheet1.col(3).width = 256*10
-#loop for writing value in sheet CP grade.xls
-for x in range(sheet.nrows):
-    sheet1.write(x,0,str(sheet.cell_value(x,0)))# extracting id no. and writing it
-    sheet1.write(x,1,sheet.cell_value(x,1))# writing name of each student
-    sheet1.write(x,2,sheet.cell_value(x,15))# copying total score of each student
-    if x == 0: # first row of 4th column contains title for 'GRADES'
-        sheet1.write(0,3,'GRADE')
-        continue # skip next line for x=3
-    sheet1.write(x,3,grader(sheet.cell_value(x,15)))# assigning grade to each student
-for x in range(1,sheet.nrows):
-    mark1 = sheet.cell_value(x,15)
-    if mark1 == 33.0:
-        NgradeA += 1
-    elif mark1 == 22.0:
-        NgradeB += 1
-    elif mark1 == 11.0:
-        NgradeC += 1
-    else:
-        NgradeNC += 1
-# saving the output file
-wb.save(r"CP grades.xls")
-# declaring new sheet for bar chart
-workbook = openpyxl.Workbook()
-wb1 = workbook.active
-# writing data into file for plotting chart
-wb1.cell(1,1).value = NgradeA
-wb1.cell(2,1).value = NgradeB
-wb1.cell(3,1).value = NgradeC
-wb1.cell(4,1).value = NgradeNC
-# plotting data into chart
-values = Reference(wb1,min_row=1,min_col=1,max_row=4,max_col=1)# limits for fetching data from file
-chart = BarChart()
-chart.add_data(values)
-chart.title = "CP grade report"# title of chart
-chart.x_axis.title = "Grades"# title for horizontal axis of the chart
-chart.y_axis.title = "No. of students"# title for vertical axis of the chart
-wb1.add_chart(chart,"E2")# command for location of chart in file
-# saving the output data(chart) file
-workbook.save(r"Bar chart.xlsx")
+#extracting student's details from input file into a data set
+with open(input_file,'r') as csvfile:
+    #declaring a reader pointer to operate upon input file
+    csvreader = csv.reader(csvfile)#assinging input file(csv) to reader pointer
+    #looping through rows containing student's details(one per each row)
+    for row in csvreader:
+        data.append(row)#adding data to data set at one row(student) each time
+#declaring a file pointer to output file to operate upon it.
+Fw = open(output_file,'w')
+#writing the header line in output file at first
+Fw.write('Name'+','+'ID'+','+'Total'+','+'Grade'+'\n')
+#loop for writing student's results in output file
+for x in range(530):
+    temp = data[x]# getting a particular student's details from complete set of data and storing into temporary set
+    Fw.write(temp[0] + ',' + temp[1]+ ',' + temp[15]+ ',' + grader(int(temp[15]))+'\n')#writing the details and grade obtained in output file
+#all students's details have been written, closing the output file pointer
+Fw.close()
+#                                         *****************************END******************************
+
+
