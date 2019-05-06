@@ -1,2 +1,2 @@
 # Course-Grader
-It inputs data from an excel file having marks of students and assigns grade to each. It writes final data to another excel file and plots a bar graph of no. of grades alloted.
+This project inputs data from a input file(csv format) having marks of students and assigns a grade to each of them. The final details with assigned grade is written in a output file in csv format.
