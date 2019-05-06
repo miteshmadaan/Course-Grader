@@ -11,12 +11,12 @@ output_file = r"C:\Users\HP\.PyCharmCE2018.3\config\scratches\tut files\projects
 #declaring a data set to store all student's raw information from input file to be written in output file
 data = []
 #grader function that assigns a grade to each of the student's marks
-def grader(mark1):
-    if mark1 == 33:
+def grader(mark):
+    if mark == 33:
         grade = 'A'
-    elif mark1 == 22:
+    elif mark == 22:
         grade = 'B'
-    elif mark1 == 11:
+    elif mark == 11:
         grade = 'C'
     else:
         grade = 'NC'
