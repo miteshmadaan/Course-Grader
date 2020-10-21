@@ -1,8 +1,6 @@
 Project - Course Grader
 Author - Mitesh Madaan
 Contact:-
-    Mobile: +91-9876424717
-    Email Id: miteshmadaan.work@gmail.com
     Github profile: https://github.com/miteshmadaan
     LinkedIn profile: https://www.linkedin.com/in/mitesh-madaan-35603217a/
     Facebook profile: https://www.facebook.com/mitesh.madaan
